@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lista-tareas</title>
+    </head>
+
+    <body>
+<div class="contenedor">
+  <!-- SECCION DE SELECCION  -->
+    <p>***Lista de Tareas***</p>
+<div class="seleccion">
+    <button (click)="caso = '1'">Todas</button>  <!-- Botones que al hacer click actualiza la variable caso -->
+    <button (click)="caso = '2'">Realizadas</button>
+    <button (click)="caso = '3'">Pendientes</button>
+    <button (click)="bandera = !bandera">Mod/Borrar</button>  <!--  Cambia el valor de la bandera  -->
+</div>
+    <div [ngSwitch]="caso"> <!-- Iniciamos un Swich para el filtro con la variable "caso" -->
+
+
+        <div *ngSwitchCase="1">   <!--CASO 1 = Mostrar todas las tareas -->
+
+        <ul>
+            <li *ngFor="let tarea of tareas; let i = index">  <!--For para recorrer el arreglo  -->
+                Tarea nro: {{ i + 1 }} = {{ tarea.toDo }}     <!--Imprime por pantalla  -->
+
+                <input
+                    type="checkbox"                           
+                    [checked]="tarea.resuelta"
+                    (change)="tarea.resuelta = !tarea.resuelta" />  
+
+                <button *ngIf="bandera" (click)="borrarTarea(i)">Borrar</button>        <!--Botones -->
+                <button *ngIf="bandera" (click)="seleccionarTarea(tarea)">Modificar</button> <!-- Para borrar o modificar-->
+
+              </li>
+        </ul>
+        </div>
+<!-- *********** FIN DE CASO 1 *********** -->
+
+    <div *ngSwitchCase="2">
+        <ul>
+          <li *ngFor="let tarea of tareas; let i = index">
+            <span *ngIf="tarea.resuelta"
+              >Tarea nro: {{ i + 1 }} = {{ tarea.toDo }} RESUELTA
+
+              <input
+                type="checkbox"
+                [checked]="tarea.resuelta"
+                (click)="tarea.resuelta = !tarea.resuelta"
+            /></span>
+            <button *ngIf="tarea.resuelta && bandera"  button (click)="borrarTarea(i)">
+              Borrar
+            </button>
+            
+          </li>
+        </ul>
+      </div>
+<!-- *********** FIN DE CASO 2 *********** -->
+
+      <div *ngSwitchCase="3">
+        <ul>
+          <li *ngFor="let tarea of tareas; let i = index">
+            <span *ngIf="tarea.resuelta === false"
+              >Tarea nro: {{ i + 1 }} = {{ tarea.toDo }} PENDIENTE
+              <input
+                type="checkbox"
+                [checked]="tarea.resuelta"
+                (click)="tarea.resuelta = !tarea.resuelta"
+            /></span>
+            <button *ngIf="tarea.resuelta === false && bandera" (click)="borrarTarea(i)">
+              Borrar
+            </button>
+          </li>
+        </ul>
+      </div>
+<!-- *********** FIN DE CASO 3 *********** -->
+<!-- AGREGAR TAREA -->
+      <div>
+        <input
+          type="text"
+          [(ngModel)]="nuevaTarea"
+          placeholder="Ingresar tarea"
+        />
+
+        <button (click)="agregarTarea()">Agregar</button>
+        <div>
+          <input
+            type="text"
+            *ngIf="tareaSeleccionada"
+            [(ngModel)]="tareaSeleccionada.toDo"
+            placeholder="Modificar tarea"
+          />
+        </div>
+        <button *ngIf="tareaSeleccionada" (click)="guardarTarea()">Conf Modificacion</button>
+      </div>
+
+
+    </div> 
+</div>
+  </body>
+</html>
